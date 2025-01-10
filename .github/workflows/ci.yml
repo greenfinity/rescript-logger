@@ -132,7 +132,7 @@ jobs:
       - validate
     strategy:
       matrix:
-        host-os: [ubuntu-latest, macos-latest-xlarge]
+        host-os: [ubuntu-latest, macos-latest]
         container-os: [linux-alpine-3]
         ocaml-version: [4.14.1]
         node-version: [16.x]
@@ -140,6 +140,12 @@ jobs:
       image: alex35mil/alpine-ocaml-opam-node-yarn:alpine-3.19-ocaml-4.14-node-16.20-yarn-1.22-o5gm
 
     steps:
+      - name: Setup docker (missing on MacOS)
+        if: runner.os == 'macos'
+        run: |
+          brew install docker
+          colima start
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
