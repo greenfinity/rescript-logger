@@ -403,6 +403,7 @@ jobs:
         run: |
           cd _release
           npm config set registry https://npm.greenfinity.hu
+          npm set //npm.greenfinity.hu/:_authToken=$NODE_AUTH_TOKEN
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.YARN_NPM_AUTH_TOKEN }}
