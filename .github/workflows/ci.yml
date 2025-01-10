@@ -188,63 +188,63 @@ jobs:
           name: ${{ matrix.container-os }}
           path: _build/default/ppx/bin/bin.exe
 
-  build_linux_arm:
-    name: Build on ${{ matrix.container-os }}
-    runs-on: ${{ matrix.host-os }}
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs:
-      - validate
-    strategy:
-      matrix:
-        host-os: [macos-latest]
-        container-os: [linux-arm-latest]
-        ocaml-version: [4.14.1]
-        node-version: [16.x]
-    container:
-      image: alex35mil/alpine-ocaml-opam-node-yarn:alpine-3.19-ocaml-4.14-node-16.20-yarn-1.22-o5gm
+  # build_linux_arm:
+  #   name: Build on ${{ matrix.container-os }}
+  #   runs-on: ${{ matrix.host-os }}
+  #   if: startsWith(github.ref, 'refs/tags/v')
+  #   needs:
+  #     - validate
+  #   strategy:
+  #     matrix:
+  #       host-os: [macos-latest]
+  #       container-os: [linux-arm-latest]
+  #       ocaml-version: [4.14.1]
+  #       node-version: [16.x]
+  #   container:
+  #     image: alex35mil/alpine-ocaml-opam-node-yarn:alpine-3.19-ocaml-4.14-node-16.20-yarn-1.22-o5gm
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v4
 
-      - name: Print Yarn cache
-        id: print-yarn-cache
-        run: echo "yarn-cache=$(yarn cache dir)" >> $GITHUB_OUTPUT
+  #     - name: Print Yarn cache
+  #       id: print-yarn-cache
+  #       run: echo "yarn-cache=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-      - name: Restore Yarn cache
-        id: yarn-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.print-yarn-cache.outputs.yarn-cache }}
-          key: ${{ matrix.container-os }}-yarn-${{ hashFiles('yarn.lock', '*/yarn.lock') }}
+  #     - name: Restore Yarn cache
+  #       id: yarn-cache
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ${{ steps.print-yarn-cache.outputs.yarn-cache }}
+  #         key: ${{ matrix.container-os }}-yarn-${{ hashFiles('yarn.lock', '*/yarn.lock') }}
 
-      - name: Install Yarn deps
-        run: yarn install
+  #     - name: Install Yarn deps
+  #       run: yarn install
 
-      - name: Setup OCaml ${{ matrix.ocaml-version }}
-        run: opam init -a --disable-sandboxing --compiler=${{ matrix.ocaml-version }}
+  #     - name: Setup OCaml ${{ matrix.ocaml-version }}
+  #       run: opam init -a --disable-sandboxing --compiler=${{ matrix.ocaml-version }}
 
-      - name: Install Opam deps
-        run: opam install . --deps-only --with-test
+  #     - name: Install Opam deps
+  #       run: opam install . --deps-only --with-test
 
-      - name: Build PPX
-        run: opam exec -- dune build --profile static
+  #     - name: Build PPX
+  #       run: opam exec -- dune build --profile static
 
-      - name: Build ReScript lib
-        run: |
-          cd lib
-          yarn run build
+  #     - name: Build ReScript lib
+  #       run: |
+  #         cd lib
+  #         yarn run build
 
-      - name: Build ReScript examples
-        run: |
-          cd examples
-          yarn run build
+  #     - name: Build ReScript examples
+  #       run: |
+  #         cd examples
+  #         yarn run build
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.container-os }}
-          path: _build/default/ppx/bin/bin.exe
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ${{ matrix.container-os }}
+  #         path: _build/default/ppx/bin/bin.exe
 
   build_windows:
     name: Build on ${{ matrix.os }}
