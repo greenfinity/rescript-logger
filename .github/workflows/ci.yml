@@ -358,13 +358,13 @@ jobs:
       - name: Download Linux x86 artifacts
         uses: actions/download-artifact@v4
         with:
-          name: linux-arm-latest
+          name: linux-alpine-3
           path: _bin/linux/intel
 
       # - name: Download Linux ARM artifacts
       #   uses: actions/download-artifact@v4
       #   with:
-      #     name: linux-alpine-3
+      #     name: linux-arm-latest
       #     path: _bin/linux/arm
 
       - name: Download Windows artifacts
