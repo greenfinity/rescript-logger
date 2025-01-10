@@ -402,8 +402,7 @@ jobs:
         if: success()
         run: |
           cd _release
-          # npm publish
-          yarn npm publish
+          npm config set registry https://npm.greenfinity.hu
+          npm publish
         env:
-          # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.YARN_NPM_AUTH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.YARN_NPM_AUTH_TOKEN }}
