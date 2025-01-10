@@ -15,6 +15,10 @@ if (platform === "win32") {
   platform = "win";
 }
 
+if (arch === "arm64") {
+  platform = "darwin";
+}
+
 const filename = `bin/${PPX}-${platform}-${arch}.exe`;
 
 const supported = fs.existsSync(filename);
@@ -29,7 +33,6 @@ if (!supported) {
   console.error("please open an issue at our repository, linked above. Please");
   console.error(`specify that you are on the ${platform} platform,`);
   console.error(`on the ${arch} architecture.`);
-
 }
 
 if (!fs.existsSync("ppx.exe")) {

@@ -327,7 +327,7 @@ jobs:
     needs:
       - build_macos
       - build_linux
-      - build_linux_arm
+      # - build_linux_arm
       - build_windows
     name: Release
     runs-on: ubuntu-latest
@@ -379,7 +379,7 @@ jobs:
           mv _bin/darwin/intel/bin.exe _release/bin/rescript-logger-ppx-darwin-x64.exe
           mv _bin/darwin/arm/bin.exe _release/bin/rescript-logger-ppx-darwin-arm64.exe
           mv _bin/linux/intel/bin.exe _release/bin/rescript-logger-ppx-linux-x64.exe
-          mv _bin/linux/arm/bin.exe _release/bin/rescript-logger-ppx-linux-arm64.exe
+          # mv _bin/linux/arm/bin.exe _release/bin/rescript-logger-ppx-linux-arm64.exe
           mv _bin/windows/bin.exe _release/bin/rescript-logger-ppx-win-x64.exe
           rm -rf _bin
 
