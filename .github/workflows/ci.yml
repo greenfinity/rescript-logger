@@ -403,6 +403,7 @@ jobs:
         run: |
           cd _release
           npm config set registry https://npm.greenfinity.hu
+          npm config set max_body_size 100mb --registry https://npm.greenfinity.hu
           npm set //npm.greenfinity.hu/:_authToken=$NODE_AUTH_TOKEN
           npm publish
         env:
