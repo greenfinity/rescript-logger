@@ -198,7 +198,7 @@ jobs:
     steps:
       - name: Setup docker (missing on MacOS)
         if: runner.os == 'macos'
-        uses: action/setup-docker-on-macos
+        uses: douglascamata/setup-docker-macos-action@v1-alpha
 
       - name: Checkout repo
         uses: actions/checkout@v4
