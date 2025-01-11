@@ -3,6 +3,7 @@ FROM node:16-alpine
 WORKDIR /app
 COPY . /app
 
+
 RUN apk add --no-cache make m4 gcc g++ git \
     ocaml ocaml-compiler-libs ocaml-ocamldoc opam ocaml-findlib
 
@@ -15,6 +16,9 @@ RUN opam install . --deps-only --with-test --yes
 # Build PPX
 RUN opam exec -- dune build --profile static
 
+# Clear node modules to avoid cross-platform issues
+RUN rm -rf node_modules
+
 # Install Yarn deps
 RUN yarn install
 
@@ -24,4 +28,5 @@ RUN (cd lib; yarn run build)
 # Build ReScript examples
 RUN (cd examples; yarn run build)
 
+# Wait until we kill the container
 ENTRYPOINT ["tail", "-f", "/dev/null"]
