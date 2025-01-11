@@ -190,7 +190,7 @@ jobs:
       - validate
     strategy:
       matrix:
-        host-os: [macos-latest]
+        host-os: [macos-13]
         container-os: [linux-arm]
         # ocaml-version: [4.14.1]
         # node-version: [16.x]
@@ -198,18 +198,7 @@ jobs:
     steps:
       - name: Setup docker (missing on MacOS)
         if: runner.os == 'macos'
-        run: |
-          brew install docker
-          brew install colima
-          brew services start colima
-          echo "Waiting for docker context to be ready"
-          until docker context use colima
-          do
-            echo "."
-            sleep 1
-            docker context ls
-          done
-          docker context ls
+        uses: douglascamata/setup-docker-macos-action
 
       - name: Checkout repo
         uses: actions/checkout@v4
