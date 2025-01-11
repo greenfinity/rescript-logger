@@ -202,8 +202,13 @@ jobs:
           brew install docker
           brew install colima
           brew services start colima
+          echo "Waiting for docker context to be ready"
+          until docker context use colima
+          do
+            echo "."
+            sleep 1
+          done
           docker context ls
-          docker context use colima
 
       - name: Checkout repo
         uses: actions/checkout@v4
