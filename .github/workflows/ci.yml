@@ -140,12 +140,6 @@ jobs:
       image: alex35mil/alpine-ocaml-opam-node-yarn:alpine-3.19-ocaml-4.14-node-16.20-yarn-1.22-o5gm
 
     steps:
-      - name: Setup docker (missing on MacOS)
-        if: runner.os == 'macos'
-        run: |
-          brew install docker
-          colima start
-
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -204,10 +198,25 @@ jobs:
           - 4.14.0
     container:
       image: ocaml/opam:alpine-3.16-ocaml-4.14
-      options: --user root
+      # options: --user root
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Print Yarn cache
+        id: print-yarn-cache
+        run: echo "yarn-cache=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Restore Yarn cache
+        id: yarn-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.print-yarn-cache.outputs.yarn-cache }}
+          key: ${{ matrix.container-os }}-yarn-${{ hashFiles('yarn.lock', '*/yarn.lock') }}
+
+      - name: Install Yarn deps
+        run: yarn install
 
       - name: Opam init
         run: opam init -a --disable-sandboxing --compiler=4.14.0
