@@ -15,6 +15,9 @@ RUN opam install . --deps-only --with-test --yes
 # Build PPX
 RUN opam exec -- dune build --profile static
 
+# Install Yarn deps
+RUN yarn install
+
 # Build ReScript lib
 RUN (cd lib; yarn run build)
 
