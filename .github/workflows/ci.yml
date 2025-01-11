@@ -202,6 +202,7 @@ jobs:
           brew install docker
           brew install colima
           brew services start colima
+          docker context use colima
 
       - name: Checkout repo
         uses: actions/checkout@v4
