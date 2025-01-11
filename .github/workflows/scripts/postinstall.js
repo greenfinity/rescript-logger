@@ -15,11 +15,6 @@ if (platform === "win32") {
   platform = "win";
 }
 
-if (arch === "arm64" && platform === "linux") {
-  // Use the x64 binary on arm64 linux
-  arch = "x64";
-}
-
 const filename = `bin/${PPX}-${platform}-${arch}.exe`;
 
 const supported = fs.existsSync(filename);
