@@ -1,5 +1,5 @@
 {
-  "name": "rescript-logger",
+  "name": "@greenfinity/rescript-logger",
   "version": "4.0.1-alpha.12",
   "description": "Logging implementation for ReScript",
   "author": "Alex Fedoseev <alex@35mil.me>",
