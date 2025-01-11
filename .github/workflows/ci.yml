@@ -182,54 +182,54 @@ jobs:
           name: ${{ matrix.container-os }}
           path: _build/default/ppx/bin/bin.exe
 
-  build_linux_arm:
-    name: Build on ${{ matrix.container-os }}
-    runs-on: ${{ matrix.host-os }}
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs:
-      - validate
-    strategy:
-      matrix:
-        host-os: [ubuntu-latest]
-        container-os: [linux-arm]
-        # ocaml-version: [4.14.1]
-        # node-version: [16.x]
+  # build_linux_arm:
+  #   name: Build on ${{ matrix.container-os }}
+  #   runs-on: ${{ matrix.host-os }}
+  #   if: startsWith(github.ref, 'refs/tags/v')
+  #   needs:
+  #     - validate
+  #   strategy:
+  #     matrix:
+  #       host-os: [ubuntu-latest]
+  #       container-os: [linux-arm]
+  #       # ocaml-version: [4.14.1]
+  #       # node-version: [16.x]
 
-    steps:
-      - name: Setup docker (missing on MacOS)
-        if: runner.os == 'macos'
-        run: |
-          brew install docker
-          colima start
+  #   steps:
+  #     - name: Setup docker (missing on MacOS)
+  #       if: runner.os == 'macos'
+  #       run: |
+  #         brew install docker
+  #         colima start
 
-      - name: Checkout repo
-        uses: actions/checkout@v4
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v4
 
-      # - name: Print Yarn cache
-      #   id: print-yarn-cache
-      #   run: echo "yarn-cache=$(yarn cache dir)" >> $GITHUB_OUTPUT
+  #     # - name: Print Yarn cache
+  #     #   id: print-yarn-cache
+  #     #   run: echo "yarn-cache=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-      # - name: Restore Yarn cache
-      #   id: yarn-cache
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ${{ steps.print-yarn-cache.outputs.yarn-cache }}
-      #     key: ${{ matrix.container-os }}-yarn-${{ hashFiles('yarn.lock', '*/yarn.lock') }}
+  #     # - name: Restore Yarn cache
+  #     #   id: yarn-cache
+  #     #   uses: actions/cache@v4
+  #     #   with:
+  #     #     path: ${{ steps.print-yarn-cache.outputs.yarn-cache }}
+  #     #     key: ${{ matrix.container-os }}-yarn-${{ hashFiles('yarn.lock', '*/yarn.lock') }}
 
-      - name: Build PPX
-        run: |
-          docker build -f devops/Dockerfile -t arm64_linux_builder .
-          export ID=`docker run -d arm64_linux_builder`
-          docker cp $ID:/app/_build .
-          # docker cp $ID:/app/lib .
-          # docker cp $ID:/app/examples .
-          docker rm -f $ID
+  #     - name: Build PPX
+  #       run: |
+  #         docker build -f devops/Dockerfile -t arm64_linux_builder .
+  #         export ID=`docker run -d arm64_linux_builder`
+  #         docker cp $ID:/app/_build .
+  #         # docker cp $ID:/app/lib .
+  #         # docker cp $ID:/app/examples .
+  #         docker rm -f $ID
     
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.container-os }}
-          path: _build/default/ppx/bin/bin.exe
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ${{ matrix.container-os }}
+  #         path: _build/default/ppx/bin/bin.exe
 
 
   build_windows:
@@ -313,7 +313,7 @@ jobs:
     needs:
       - build_macos
       - build_linux
-      - build_linux_arm
+      # - build_linux_arm
       - build_windows
     name: Release
     runs-on: ubuntu-latest
@@ -365,7 +365,7 @@ jobs:
           mv _bin/darwin/intel/bin.exe _release/bin/rescript-logger-ppx-darwin-x64.exe
           mv _bin/darwin/arm/bin.exe _release/bin/rescript-logger-ppx-darwin-arm64.exe
           mv _bin/linux/intel/bin.exe _release/bin/rescript-logger-ppx-linux-x64.exe
-          mv _bin/linux/arm/bin.exe _release/bin/rescript-logger-ppx-linux-arm64.exe
+          # mv _bin/linux/arm/bin.exe _release/bin/rescript-logger-ppx-linux-arm64.exe
           mv _bin/windows/bin.exe _release/bin/rescript-logger-ppx-win-x64.exe
           rm -rf _bin
 
