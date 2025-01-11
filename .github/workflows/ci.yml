@@ -201,8 +201,7 @@ jobs:
         run: |
           brew install docker
           brew install colima
-          # brew services start colima
-          colima start
+          brew services start colima
           docker context ls
           docker context use colima
 
