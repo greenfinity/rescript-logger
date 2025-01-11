@@ -191,7 +191,7 @@ jobs:
     strategy:
       matrix:
         host-os: [ubuntu-latest]
-        container-os: [linux-alpine-3]
+        container-os: [linux-arm]
         # ocaml-version: [4.14.1]
         # node-version: [16.x]
 
