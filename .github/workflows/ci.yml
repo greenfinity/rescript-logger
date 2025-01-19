@@ -190,45 +190,55 @@ jobs:
       - validate
     strategy:
       matrix:
-        host-os: [macos-13]
-        container-os: [linux-arm]
-        # ocaml-version: [4.14.1]
-        # node-version: [16.x]
+        host-os: [ubuntu-24.04-arm]
+        container-os: [linux-alpine-3]
+        ocaml-version: [4.14.1]
+        node-version: [16.x]
+    container:
+      image: alex35mil/alpine-ocaml-opam-node-yarn:alpine-3.19-ocaml-4.14-node-16.20-yarn-1.22-o5gm
 
     steps:
-      - name: Setup docker (missing on MacOS)
-        if: runner.os == 'macos'
-        uses: douglascamata/setup-docker-macos-action@v1-alpha
-
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # - name: Print Yarn cache
-      #   id: print-yarn-cache
-      #   run: echo "yarn-cache=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - name: Print Yarn cache
+        id: print-yarn-cache
+        run: echo "yarn-cache=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-      # - name: Restore Yarn cache
-      #   id: yarn-cache
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: ${{ steps.print-yarn-cache.outputs.yarn-cache }}
-      #     key: ${{ matrix.container-os }}-yarn-${{ hashFiles('yarn.lock', '*/yarn.lock') }}
+      - name: Restore Yarn cache
+        id: yarn-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.print-yarn-cache.outputs.yarn-cache }}
+          key: ${{ matrix.container-os }}-yarn-${{ hashFiles('yarn.lock', '*/yarn.lock') }}
+
+      - name: Install Yarn deps
+        run: yarn install
+
+      - name: Setup OCaml ${{ matrix.ocaml-version }}
+        run: opam init -a --disable-sandboxing --compiler=${{ matrix.ocaml-version }}
+
+      - name: Install Opam deps
+        run: opam install . --deps-only --with-test
 
       - name: Build PPX
+        run: opam exec -- dune build --profile static
+
+      - name: Build ReScript lib
         run: |
-          docker build -f devops/Dockerfile -t arm64_linux_builder .
-          export ID=`docker run -d arm64_linux_builder`
-          docker cp $ID:/app/_build .
-          # docker cp $ID:/app/lib .
-          # docker cp $ID:/app/examples .
-          docker rm -f $ID
-    
+          cd lib
+          yarn run build
+
+      - name: Build ReScript examples
+        run: |
+          cd examples
+          yarn run build
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.container-os }}
           path: _build/default/ppx/bin/bin.exe
-
 
   build_windows:
     name: Build on ${{ matrix.os }}
