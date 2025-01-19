@@ -17,14 +17,11 @@ jobs:
         os: [ubuntu-latest]
         ocaml-version: [4.14.1]
         node-version: [16.x]
+    container:
+      image: ocaml/opam:ubuntu-20.04-ocaml-4.14
+      options: --user root
 
     steps:
-      - name: remove git-lfs
-        shell: bash
-        run: |
-          sudo rm /etc/apt/sources.list.d/github_git-lfs.list 
-          sudo rm /etc/apt/sources.list.d/github_git-lfs.list.save
-
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -32,6 +29,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+
+      - name: Install Yarn
+        run: npm install -g yarn
 
       - name: Print Yarn cache
         id: print-yarn-cache
@@ -48,12 +48,13 @@ jobs:
         run: yarn install
 
       - name: Setup OCaml ${{ matrix.ocaml-version }}
-        uses: ocaml/setup-ocaml@v2
-        with:
-          ocaml-compiler: ${{ matrix.ocaml-version }}
+        # uses: ocaml/setup-ocaml@v2
+        # with:
+        #   ocaml-compiler: ${{ matrix.ocaml-version }}
+        run: opam init -a --disable-sandboxing --compiler=4.14.1
 
       - name: Install Opam deps
-        run: opam install . --deps-only --with-test
+        run: opam install . --deps-only --with-test --yes
 
       - name: Build PPX
         run: opam exec -- dune build
