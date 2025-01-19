@@ -17,14 +17,10 @@ jobs:
         os: [ubuntu-latest]
         ocaml-version: [4.14.1]
         node-version: [16.x]
+    container:
+      image: alex35mil/alpine-ocaml-opam-node-yarn:alpine-3.19-ocaml-4.14-node-16.20-yarn-1.22-o5gm
 
     steps:
-      - name: remove git-lfs
-        shell: bash
-        run: |
-          sudo rm /etc/apt/sources.list.d/github_git-lfs.list 
-          sudo rm /etc/apt/sources.list.d/github_git-lfs.list.save
-
       - name: Checkout repo
         uses: actions/checkout@v4
 
