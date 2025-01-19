@@ -193,15 +193,24 @@ jobs:
     strategy:
       matrix:
         host-os: [ubuntu-24.04-arm]
-        container-os: [linux-alpine-3]
+        container-os: [linux-ubuntu]
         ocaml-version: [4.14.1]
         node-version: [16.x]
     container:
-      image: alex35mil/alpine-ocaml-opam-node-yarn:alpine-3.19-ocaml-4.14-node-16.20-yarn-1.22-o5gm
+      image: ocaml/opam:ubuntu-20.04-ocaml-4.14
+      options: --user root
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
+      - name: Install Node 16.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.x
+
+      - name: Install Yarn
+        run: npm install -g yarn
 
       - name: Print Yarn cache
         id: print-yarn-cache
